@@ -1,6 +1,11 @@
 import styles from './Sidebar.module.css';
 interface Project { id: string; name: string; color: string; }
-interface SidebarProps { projects: Project[]; isOpen: boolean; }
+interface SidebarProps { 
+    projects: Project[]; 
+    isOpen: boolean; 
+    onRename: (project: Project) => void;
+    onDelete: (id: string) => void;
+}
 export default function Sidebar({ projects, isOpen }: SidebarProps) {
  return (
  <aside className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}>
