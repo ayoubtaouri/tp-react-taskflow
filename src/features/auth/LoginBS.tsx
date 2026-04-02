@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import { Container, Card, Form, Button, Alert } from 'react-bootstrap'; 
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import api from '../../API/axios';
-import styles from './Login.module.css';
-export default function Login() {
+import { useAuth } from './AuthContext'; 
+import api from '../../API/axios'; 
+  
+export default function LoginMUI() {
   const navigate = useNavigate();
   const location = useLocation();
   const { state, dispatch } = useAuth();
@@ -29,23 +30,26 @@ export default function Login() {
     } catch {
       dispatch({ type: 'LOGIN_FAILURE', payload: 'Erreur serveur' });
     }
-  }
-  return (
-    <div className={styles.container}>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <h1 className={styles.title}>TaskFlow</h1>
-        <p className={styles.subtitle}>Connectez-vous pour continuer</p>
-        {state.error && <div className={styles.error}>{state.error}</div>}
-        <input type="email" placeholder="Email"
-          value={email} onChange={e => setEmail(e.target.value)}
-          className={styles.input} required />
-        <input type="password" placeholder="Mot de passe"
-          value={password} onChange={e => setPassword(e.target.value)}
-          className={styles.input} required />
-        <button type="submit" className={styles.button} disabled={state.loading}>
-          {state.loading ? 'Connexion...' : 'Se connecter'}
-        </button>
-      </form>
-    </div>
-  );
-}
+  } 
+  
+  return ( 
+<Container className="d-flex justify-content-center align-items-center" style={{ 
+height:'100vh' }}> 
+<Card style={{ maxWidth: 400, width: '100%' }}> 
+<Card.Body> 
+<Card.Title className="text-center" style={{ color:'#1B8C3E' }}>TaskFlow</Card.Title> 
+{state.error && <Alert variant="danger">{state.error}</Alert>} 
+<Form onSubmit={handleSubmit}> 
+<Form.Group className="mb-3"> 
+<Form.Control type="email" placeholder="Email" /> 
+</Form.Group> 
+<Form.Group className="mb-3"> 
+<Form.Control type="password" placeholder="Mot de passe" /> 
+</Form.Group> 
+<Button type="submit" className="w-100">Se connecter</Button> 
+</Form> 
+</Card.Body> 
+</Card> 
+</Container>  
+  ); 
+} 
