@@ -41,11 +41,19 @@ height:'100vh' }}>
 {state.error && <Alert variant="danger">{state.error}</Alert>} 
 <Form onSubmit={handleSubmit}> 
 <Form.Group className="mb-3"> 
-<Form.Control type="email" placeholder="Email" /> 
-</Form.Group> 
+<Form.Control 
+  type="email" 
+  placeholder="Email"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+/></Form.Group> 
 <Form.Group className="mb-3"> 
-<Form.Control type="password" placeholder="Mot de passe" /> 
-</Form.Group> 
+<Form.Control 
+  type="password" 
+  placeholder="Mot de passe"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+/></Form.Group> 
 <Button type="submit" className="w-100">Se connecter</Button> 
 </Form> 
 </Card.Body> 
