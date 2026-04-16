@@ -1,5 +1,4 @@
 Compte Rendu TP4 : MUI vs Bootstrap & Architecture BDD
-Réalisé par : Younes Bakkali Terghi
 
 Partie 1 : Header avec Material UI
 Q1 : Combien de lignes de CSS avez-vous écrit pour le Header MUI ? Comparez avec votre Header.module.css. J'ai écrit 0 ligne de CSS externe pour le composant HeaderMUI. Tout le style est géré via la propriété sx directement dans les composants (CSS-in-JS). En comparaison, mon ancien Header.module.css nécessitait probablement autour de 20-30 lignes de code pour gérer le flexbox, les espacements et les couleurs manuellement.
