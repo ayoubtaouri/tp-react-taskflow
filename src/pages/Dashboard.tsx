@@ -1,93 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../features/auth/AuthContext';
-import api from '../API/axios';
-import HeaderBS from '../components/HeaderBS';
+import useProjects from '../hooks/useProject';
+//import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import MainContent from '../components/MainContent';
 import ProjectForm from '../components/ProjectForm';
 import styles from './Dashboard.module.css';
-
-interface Project { id: string; name: string; color: string; }
-interface Column { id: string; title: string; tasks: string[]; }
+//import HeaderMUI from "../components/HeaderMUI.tsx";
+import HeaderBS from "../components/HeaderBS.tsx";
 
 export default function Dashboard() {
     const { state: authState, dispatch } = useAuth();
+
+    const {
+        projects,
+        columns,
+        loading,
+        error,
+        addProject,
+        renameProject,
+        deleteProject
+    } = useProjects();
+
     const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [columns, setColumns] = useState<Column[]>([]);
-    const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [saving, setSaving] = useState(false);
-
-    // GET — charger les données au montage
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const [projRes, colRes] = await Promise.all([
-                    api.get('/projects'),
-                    api.get('/columns'),
-                ]);
-                setProjects(projRes.data);
-                setColumns(colRes.data);
-            } catch (e) {
-                console.error(e);
-                setError('Erreur lors du chargement des données');
-            }
-            finally { setLoading(false); }
-        }
-        fetchData();
-    }, []);
-
-    // POST — ajouter un projet
-    async function addProject(name: string, color: string) {
-        setSaving(true);
-        setError(null);
-        try {
-            const { data } = await api.post('/projects', { name, color });
-            setProjects(prev => [...prev, data]);
-            setShowForm(false);
-        } catch (err: any) {
-            if (err.isAxiosError) {
-                setError(err.response?.data?.message || `Erreur ${err.response?.status}`);
-            } else {
-                setError('Erreur inconnue');
-            }
-        } finally {
-            setSaving(false);
-        }
-    }
-
-    // PUT — renommer un projet
-    async function renameProject(project: Project) {
-        const newName = prompt('Nouveau nom :', project.name);
-        if (!newName || newName === project.name) return;
-        setSaving(true);
-        setError(null);
-        try {
-            const { data } = await api.put(`/projects/${project.id}`, { ...project, name: newName });
-            setProjects(prev => prev.map(p => p.id === project.id ? data : p));
-        } catch (err) {
-            setError('Erreur lors de la modification du projet');
-        } finally {
-            setSaving(false);
-        }
-    }
-
-    // DELETE — supprimer un projet
-    async function deleteProject(id: string) {
-        if (!confirm('Êtes-vous sûr ?')) return;
-        setSaving(true);
-        setError(null);
-        try {
-            await api.delete(`/projects/${id}`);
-            setProjects(prev => prev.filter(p => p.id !== id));
-        } catch (err) {
-            setError('Erreur lors de la suppression du projet');
-        } finally {
-            setSaving(false);
-        }
-    }
 
     if (loading) return <div className={styles.loading}>Chargement...</div>;
 
@@ -99,6 +35,7 @@ export default function Dashboard() {
                 userName={authState.user?.name}
                 onLogout={() => dispatch({ type: 'LOGOUT' })}
             />
+
             <div className={styles.body}>
                 <Sidebar
                     projects={projects}
@@ -106,12 +43,16 @@ export default function Dashboard() {
                     onRename={renameProject}
                     onDelete={deleteProject}
                 />
+
                 <div className={styles.content}>
                     <div className={styles.toolbar}>
                         {error && <div className={styles.error}>{error}</div>}
+
                         {!showForm ? (
-                            <button className={styles.addBtn} disabled={saving}
-                                    onClick={() => setShowForm(true)}>
+                            <button
+                                className={styles.addBtn}
+                                onClick={() => setShowForm(true)}
+                            >
                                 + Nouveau projet
                             </button>
                         ) : (
@@ -124,6 +65,7 @@ export default function Dashboard() {
                             />
                         )}
                     </div>
+
                     <MainContent columns={columns} />
                 </div>
             </div>
