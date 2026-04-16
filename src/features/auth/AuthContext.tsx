@@ -1,6 +1,6 @@
 // src/features/auth/AuthContext.tsx
 import { createContext, useContext, useReducer, type ReactNode } from 'react';
-import { authReducer, initialState, type AuthState, type AuthAction } from './authreducer';
+import { authReducer, initialState, type AuthState, type AuthAction } from './authReducer';
 interface AuthContextType {
  state: AuthState;
  dispatch: React.Dispatch<AuthAction>;
